@@ -1,0 +1,34 @@
+{
+  "wins": [
+    {
+      "id": "win-01",
+      "headline": "New client: [Client name]",
+      "detail": "Search and social, led from Leeds",
+      "office": "Leeds"
+    },
+    {
+      "id": "win-02",
+      "headline": "Award shortlist: [Award name]",
+      "detail": "For our work with [Client name]",
+      "office": "London"
+    },
+    {
+      "id": "win-03",
+      "headline": "Scope grown: [Client name]",
+      "detail": "Adding creative and data to the mix",
+      "office": "Manchester"
+    },
+    {
+      "id": "win-04",
+      "headline": "New client: [Client name]",
+      "detail": "Our New York team's latest win",
+      "office": "New York"
+    },
+    {
+      "id": "win-05",
+      "headline": "Campaign live: [Campaign name]",
+      "detail": "A cross-office team, start to finish",
+      "office": "Remote"
+    }
+  ]
+}

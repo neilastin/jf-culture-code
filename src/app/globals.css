@@ -1,26 +1,175 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/*
+ * Colour tokens.
+ * Section fields are sampled from the print PDF; UI accents come from the
+ * 2026 brand guidelines.
+ */
+@theme {
+  /* Brand UI palette */
+  --color-charcoal: #212121;
+  --color-stone: #f3f3f3;
+  --color-teal: #47ffce;
+  --color-lime: #d4ff8b;
+  --color-purple: #675fec;
+
+  /* Print section fields */
+  --color-ink: #363436;
+  --color-lime-field: #c8df88;
+  --color-mint: #9cd6c5;
+  --color-part: #52c0a5;
+  --color-sage: #67a198;
+  --color-together: #5f65ae;
+  --color-burst: #3dbb9a;
+  --color-burst-ray: #8fd3c2;
+  --color-gold: #f4c625;
+  --color-via: #ecf4d8;
+  --color-via-line: #c8df88;
+  --color-dont: #feeeea;
+  --color-dont-line: #f6c9c0;
+  --color-cross: #f26f70;
+  --color-paper: #f2f2f3;
+
+  --font-display: var(--font-sohne), "Archivo", system-ui, sans-serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+
+  --animate-spin-slow: spin 120s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-dot: pulse-dot 1.8s ease-out infinite;
+
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --nav-h: 4rem;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  /* Clip on the root too, or mobile browsers widen the layout viewport to fit transformed content */
+  overflow-x: clip;
+  background: var(--color-ink);
+  scroll-padding-top: var(--nav-h);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Clip (not hide) so entrance transforms never cause sideways scrolling and sticky still works */
+  overflow-x: clip;
+  background: var(--color-paper);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Wide, heavy display type used for headings across the print piece */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes disco {
+  0%,
+  100% {
+    background-color: var(--color-lime);
+  }
+  25% {
+    background-color: var(--color-teal);
+  }
+  50% {
+    background-color: #c9c6ff;
+  }
+  75% {
+    background-color: var(--color-gold);
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pulse-dot {
+  0% {
+    box-shadow: 0 0 0 0 rgb(71 255 206 / 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgb(71 255 206 / 0);
+  }
+}
+
+/* Visible focus for every interactive element */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-purple);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.focus-light :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline-color: var(--color-teal);
+}
+
+::selection {
+  background: var(--color-teal);
+  color: var(--color-charcoal);
+}
+
+/* Layered "opener" stages scale their contents with the stage width */
+.stage {
+  container-type: inline-size;
+}
+
+/* Sunburst behind the cover statement, as in print page 2 */
+.sunburst {
+  background: repeating-conic-gradient(
+    from 0deg at 50% 55%,
+    var(--color-burst) 0deg 9deg,
+    var(--color-burst-ray) 9deg 18deg
+  );
+}
+
+/* Halftone dots used on energised states */
+.halftone {
+  background-image: radial-gradient(rgb(0 0 0 / 0.18) 1.2px, transparent 1.4px);
+  background-size: 10px 10px;
+}
+
+/* Hide scrollbars on horizontal strips while keeping them scrollable */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Split-text lines are masked so words slide up from below */
+.split-line {
+  overflow: clip;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }

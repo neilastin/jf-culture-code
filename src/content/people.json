@@ -1,0 +1,40 @@
+{
+  "spotlights": [
+    {
+      "id": "person-01",
+      "kind": "New joiner",
+      "name": "[Team member]",
+      "role": "[Paid Media Executive]",
+      "office": "Manchester",
+      "quote": "Week two and I've already presented to a client. Nobody made me feel new - they just made room.",
+      "value": "together"
+    },
+    {
+      "id": "person-02",
+      "kind": "Promotion",
+      "name": "[Team member]",
+      "role": "[Senior Strategist]",
+      "office": "London",
+      "quote": "I asked for honest feedback every month for a year. It was the best thing I did.",
+      "value": "open"
+    },
+    {
+      "id": "person-03",
+      "kind": "Made it happen",
+      "name": "[Team member]",
+      "role": "[Developer]",
+      "office": "Leeds",
+      "quote": "I saw a better way to build our reports, so I built it. Now the whole team uses it.",
+      "value": "proactive"
+    },
+    {
+      "id": "person-04",
+      "kind": "New joiner",
+      "name": "[Team member]",
+      "role": "[Account Manager]",
+      "office": "New York",
+      "quote": "Different time zone, same team. My first week was full of calls with people across every office.",
+      "value": "together"
+    }
+  ]
+}
