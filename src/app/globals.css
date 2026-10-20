@@ -61,7 +61,6 @@ body {
   color: var(--color-charcoal);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
 /* Wide, heavy display type used for headings across the print piece */

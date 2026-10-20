@@ -29,6 +29,16 @@ It's a standard Next.js app, ready to import into Vercel with no settings change
 - **Easter eggs:** type "never settle" anywhere (or the Konami code), click the founders' painting, click either side of the High Standards see-saw, let the values float away in "Why we are obsessive" and click them back down, or flip the light switch six times fast.
 - **Experimental ideas** (footer button, or `/experimental`): a values quiz, a gravity playground, "Sign the Code", live office clocks, and ideas that need new content. Kept on a separate page so the main Code stays focused.
 
+### Checking changes
+
+With the site running (`npm run dev`), from this folder:
+
+- `node scripts/qa/copy-check.mjs`: the brief's banned-strings check
+- `node scripts/qa/story-flow.mjs`: end-to-end check of sharing, moderation, the light switch, the Value in Action flip and narration
+- `node scripts/qa/screenshots.mjs 1440 900 qa-out/desktop` (or `390 844 qa-out/mobile`): screenshots down the whole page
+
+The first time, run `npx playwright install chromium`. `CLAUDE.md` has fuller handover notes for anyone (or any AI session) picking the project up.
+
 ## Stack
 
 - **Next.js 16** (App Router, static prerender) + **TypeScript** (strict) + **Tailwind CSS 4**
