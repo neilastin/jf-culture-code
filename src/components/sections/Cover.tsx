@@ -4,9 +4,6 @@ import { motion, type Transition } from "framer-motion";
 import { cover } from "@/content/code";
 import { ui } from "@/content/site";
 import { useScrollTo } from "@/components/motion/SmoothScroll";
-import { FULL_PAGE } from "@/components/stage/geometry";
-import { Stage } from "@/components/stage/Stage";
-import { StageLayer } from "@/components/stage/StageLayer";
 import { MediaImage } from "@/components/ui/MediaImage";
 
 const spring = (delay: number, stiffness = 200, damping = 13): Transition => ({
@@ -14,66 +11,65 @@ const spring = (delay: number, stiffness = 200, damping = 13): Transition => ({
   stiffness,
   damping,
   delay,
-  opacity: { duration: 0.3, delay },
+  opacity: { duration: 0.25, delay },
 });
 
-/** Print page 1: the cover lettering and characters assemble on load. */
+/**
+ * Print page 1: the Culture Code lettering bursts out of the centre of a
+ * slowly turning sunburst, with Journey Further beneath it.
+ */
 export function Cover() {
   const scrollTo = useScrollTo();
   return (
     <section
       id="cover"
       aria-labelledby="cover-title"
-      className="relative flex flex-col items-center justify-end overflow-hidden bg-lime-field px-4 pt-[calc(var(--nav-h)+1.5rem)] sm:min-h-[100svh]"
+      className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-burst px-4 pt-[calc(var(--nav-h)+1rem)] pb-16"
     >
       <h1 id="cover-title" className="sr-only">
         {cover.title}
       </h1>
 
-      <Stage box={FULL_PAGE} depth={0.05} className="w-full max-w-[min(calc(100svh-var(--nav-h)-1.5rem),940px)]">
-        <StageLayer rect={[45, 21, 546, 230]} box={FULL_PAGE} layer="lettering">
+      <div className="relative w-[min(88vw,760px,calc((100svh-var(--nav-h)-9rem)*1.25))]">
+        {/* The sunburst is centred on the lettering, so the burst comes from its origin. */}
+        <div aria-hidden="true" className="absolute top-[42%] left-1/2 -z-10 aspect-square w-[260vmax] -translate-x-1/2 -translate-y-1/2">
+          <div className="sunburst h-full w-full animate-spin-slow rounded-full" />
+        </div>
+        <motion.span
+          aria-hidden="true"
+          className="absolute top-[42%] left-1/2 -z-10 aspect-square w-[40%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[6px] border-white/70"
+          initial={{ scale: 0, opacity: 0.9 }}
+          animate={{ scale: 4, opacity: 0 }}
+          transition={{ type: "tween", duration: 0.9, delay: 0.2, ease: "easeOut" }}
+        />
+
+        <motion.div
+          className="relative drop-shadow-[0_0_28px_rgb(255_255_255/0.45)]"
+          initial={{ opacity: 0, scale: 0, rotate: -14 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          transition={spring(0.25, 190, 12)}
+        >
+          <MediaImage name="lettering/culture" alt="" preload sizes="(min-width: 900px) 760px, 88vw" className="h-auto w-full" />
           <motion.div
-            className="relative h-full w-full"
-            initial={{ opacity: 0, y: "-60%", rotate: -10 }}
-            animate={{ opacity: 1, y: 0, rotate: 0 }}
-            transition={spring(0.1, 170, 11)}
+            className="relative -mt-[9%] ml-[9%] w-[84%]"
+            initial={{ scale: 0.55, y: "-12%" }}
+            animate={{ scale: 1, y: "0%" }}
+            transition={spring(0.55, 320, 11)}
           >
-            <MediaImage name="lettering/cover-culture" alt="" fill preload sizes="(min-width: 900px) 760px, 90vw" className="object-fill" />
+            <MediaImage name="lettering/code" alt="" preload sizes="(min-width: 900px) 640px, 74vw" className="h-auto w-full" />
           </motion.div>
-        </StageLayer>
-        <StageLayer rect={[72, 175, 510, 404]} box={FULL_PAGE} layer="lettering">
-          <motion.div
-            className="relative h-full w-full"
-            initial={{ opacity: 0, scale: 0.3, rotate: 8 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={spring(0.4, 260, 12)}
-          >
-            <MediaImage name="lettering/cover-code" alt="" fill preload sizes="(min-width: 900px) 660px, 80vw" className="object-fill" />
-          </motion.div>
-        </StageLayer>
-        {/* The characters are the LCP image, so they render in place from the first paint; the lettering assembles around them. */}
-        <StageLayer rect={[-1, 158, 597, 597]} box={FULL_PAGE} layer="static">
-          <MediaImage
-            name="illustrations/cover-people"
-            alt="Illustration of five smiling Journey Further colleagues standing together"
-            fill
-            preload
-            sizes="(min-width: 900px) 880px, 100vw"
-            className="object-fill"
-          />
-        </StageLayer>
-        <StageLayer rect={[32, 448, 563, 496]} box={FULL_PAGE} layer="static" className="flex items-center">
-          <motion.p
-            aria-hidden="true"
-            className="font-display w-full text-center text-[7.1cqw] whitespace-nowrap text-white drop-shadow-[0_3px_12px_rgb(0_0_0/0.35)]"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={spring(1.15, 180, 18)}
-          >
-            Journey Further
-          </motion.p>
-        </StageLayer>
-      </Stage>
+        </motion.div>
+
+        <motion.p
+          aria-hidden="true"
+          className="font-display mt-[7%] text-center text-[clamp(1.5rem,6.6vw,3.6rem)] whitespace-nowrap text-white drop-shadow-[0_3px_12px_rgb(0_0_0/0.25)]"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={spring(1.05, 180, 18)}
+        >
+          Journey Further
+        </motion.p>
+      </div>
 
       <motion.button
         type="button"

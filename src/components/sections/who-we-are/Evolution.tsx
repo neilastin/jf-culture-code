@@ -6,7 +6,7 @@ import { timeline } from "@/content/site";
 import { gsap, MOTION_OK, useGSAP } from "@/lib/gsap";
 import { RevealText } from "@/components/motion/RevealText";
 import { MediaImage } from "@/components/ui/MediaImage";
-import { SectionAudio } from "@/components/ui/SectionAudio";
+import { ThrowbackMarker } from "./Throwback";
 
 const ROW = 100 / timeline.length;
 /* Stops weave left and right of the line's strip. */
@@ -25,6 +25,9 @@ function buildPath(): string {
 }
 
 const PATH = buildPath();
+
+const MARKER =
+  "absolute grid h-11 w-11 -translate-x-1/2 place-items-center rounded-full border-4 border-paper bg-ink shadow-lg sm:h-14 sm:w-14";
 
 /** The Evolution: a journey line that draws itself as you scroll, with stops popping in. */
 export function Evolution() {
@@ -60,15 +63,12 @@ export function Evolution() {
     <div ref={ref} className="bg-paper text-ink">
       <div className="mx-auto grid max-w-[1400px] gap-12 px-4 py-20 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-32">
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
-          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-            <RevealText as="h3" className="font-display text-3xl sm:text-5xl">
-              {whoWeAre.evolution.heading}
-            </RevealText>
-            <SectionAudio narration="evolution" />
-          </div>
+          <RevealText as="h3" className="font-display text-3xl sm:text-5xl">
+            {whoWeAre.evolution.heading}
+          </RevealText>
           <RevealText className="mt-8 text-lg leading-relaxed sm:text-xl">{whoWeAre.evolution.body}</RevealText>
           <MediaImage
-            name="photos/evolution-building"
+            name="photos/front-office"
             alt="The Journey Further sign outside a Leeds office tower"
             sizes="(min-width: 1024px) 600px, 92vw"
             className="mt-10 h-auto w-full rounded-3xl object-cover shadow-xl lg:max-h-[38vh]"
@@ -105,14 +105,13 @@ export function Evolution() {
                 className="absolute right-0 left-0 flex -translate-y-1/2 items-center"
                 style={{ top: `${points[i].y}%` }}
               >
-                <span
-                  data-marker
-                  aria-hidden="true"
-                  className="absolute grid h-11 w-11 -translate-x-1/2 place-items-center rounded-full border-4 border-paper bg-ink shadow-lg sm:h-14 sm:w-14"
-                  style={{ left: `calc(${points[i].x / 100} * var(--strip))` }}
-                >
-                  <span className={i === 0 ? "h-4 w-4 rounded-full bg-gold" : "h-4 w-4 rounded-full bg-teal"} />
-                </span>
+                {stop.place === "Leeds" ? (
+                  <ThrowbackMarker className={MARKER} style={{ left: `calc(${points[i].x / 100} * var(--strip))` }} />
+                ) : (
+                  <span data-marker aria-hidden="true" className={MARKER} style={{ left: `calc(${points[i].x / 100} * var(--strip))` }}>
+                    <span className={i === 0 ? "h-4 w-4 rounded-full bg-gold" : "h-4 w-4 rounded-full bg-teal"} />
+                  </span>
+                )}
                 <div data-label className="min-w-0 pl-[calc(var(--strip)+1.25rem)]">
                   {stop.year && (
                     <span className="font-display mb-1 inline-block rounded-md bg-gold px-2 py-1 text-xs">{stop.year}</span>

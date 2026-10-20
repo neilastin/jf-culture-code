@@ -14,10 +14,8 @@ import { Proactive } from "@/components/sections/values/Proactive";
 import { Together } from "@/components/sections/values/Together";
 import { WhoWeAre } from "@/components/sections/who-we-are/WhoWeAre";
 import { YouBelongHere } from "@/components/sections/you-belong/YouBelongHere";
-import { AdminBar } from "@/components/stories/AdminBar";
-import { ShareStoryDialog } from "@/components/stories/ShareStoryDialog";
+import { ShareInfoDialog } from "@/components/stories/ShareInfoDialog";
 import { StoriesProvider } from "@/components/stories/StoriesProvider";
-import { StoryModal } from "@/components/stories/StoryModal";
 
 export default function Home() {
   return (
@@ -39,9 +37,8 @@ export default function Home() {
             <ShapeTheCode />
           </main>
           <SiteFooter />
-          <ShareStoryDialog />
-          <StoryModal />
-          <AdminBar />
+          {/* Values in the Wild (StoryWall, StoryModal, ShareStoryDialog, AdminBar) is parked for launch; see README. */}
+          <ShareInfoDialog />
           <EasterEggs />
         </StoriesProvider>
       </SmoothScroll>

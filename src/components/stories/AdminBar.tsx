@@ -6,7 +6,7 @@ import { useStories } from "./StoriesProvider";
 
 /** Moderation demo: shows how the People team would approve, feature or remove stories. */
 export function AdminBar() {
-  const { admin, setAdmin, stories, receiveIncoming, resetDemo, setFilters } = useStories();
+  const { admin, setAdmin, stories, resetDemo } = useStories();
   const scrollTo = useScrollTo();
   const pending = stories.filter((s) => s.status === "pending").length;
 
@@ -26,16 +26,10 @@ export function AdminBar() {
           </p>
           <button
             type="button"
-            onClick={() => {
-              setFilters((f) => ({ ...f, query: "" }));
-              scrollTo("values-in-the-wild");
-            }}
+            onClick={() => scrollTo("values-in-the-wild")}
             className="rounded-full bg-white/15 px-3 py-2 text-xs font-extrabold hover:bg-white/25"
           >
             Review stories
-          </button>
-          <button type="button" onClick={() => receiveIncoming()} className="rounded-full bg-white/15 px-3 py-2 text-xs font-extrabold hover:bg-white/25">
-            Simulate a new story
           </button>
           <button type="button" onClick={resetDemo} className="rounded-full bg-white/15 px-3 py-2 text-xs font-extrabold hover:bg-white/25">
             Reset demo

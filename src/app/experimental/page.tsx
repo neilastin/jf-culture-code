@@ -3,8 +3,6 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { easterEggs, ideasNeedingContent } from "@/content/experiments";
 import { EasterEggs } from "@/components/layout/EasterEggs";
-import { GravityPlayground } from "@/components/experiments/GravityPlayground";
-import { OfficeClocks } from "@/components/experiments/OfficeClocks";
 import { SignTheCode } from "@/components/experiments/SignTheCode";
 import { ValueQuiz } from "@/components/experiments/ValueQuiz";
 import { MotionProvider } from "@/components/motion/MotionProvider";
@@ -14,6 +12,8 @@ import { Logo } from "@/components/ui/Logo";
 export const metadata: Metadata = {
   title: "Experimental ideas · The Journey Further Culture Code",
   description: "Playful extras for the online Culture Code, kept separate from the main site.",
+  // Not linked from the v1.0 site; reachable only by its URL.
+  robots: { index: false, follow: false },
 };
 
 function Experiment({ id, kicker, title, intro, children }: { id: string; kicker: string; title: string; intro: string; children: ReactNode }) {
@@ -62,16 +62,8 @@ export default function ExperimentalPage() {
             <ValueQuiz />
           </Experiment>
 
-          <Experiment id="gravity" kicker="Experiment 02" title="Values gravity" intro="Our values are our gravity. Throw them around, switch gravity off and see what happens.">
-            <GravityPlayground />
-          </Experiment>
-
-          <Experiment id="sign" kicker="Experiment 03" title="Sign the Code" intro="Pick the promise you're making to Journey Further and put your name to it.">
+          <Experiment id="sign" kicker="Experiment 02" title="Sign the Code" intro="Pick the promise you're making to Journey Further and put your name to it.">
             <SignTheCode />
-          </Experiment>
-
-          <Experiment id="clocks" kicker="Experiment 04" title="Right now at Journey Further" intro="One team across two continents. Here's the time in every office, and a cheeky guess at what's going on.">
-            <OfficeClocks />
           </Experiment>
 
           <section aria-labelledby="eggs" className="border-t border-ink/15 py-16 sm:py-20">

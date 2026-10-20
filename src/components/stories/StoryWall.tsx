@@ -1,90 +1,51 @@
 "use client";
 
-import { LayoutGroup } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { LayoutGroup, motion } from "framer-motion";
 import { ui } from "@/content/site";
-import type { Story } from "@/content/types";
-import { useMediaQuery } from "@/lib/useMediaQuery";
 import { PlusIcon } from "@/components/ui/Icons";
 import { StoryCard } from "./StoryCard";
-import { StoryFilters } from "./StoryFilters";
 import { useStories } from "./StoriesProvider";
 
-/** Rough card height, used to balance the masonry columns. */
-const estimate = (s: Story) => 220 + s.body.length * 0.55 + (s.image ? 240 : 0);
-
-function toColumns(stories: Story[], count: number): Story[][] {
-  const cols: Story[][] = Array.from({ length: count }, () => []);
-  const heights = new Array<number>(count).fill(0);
-  for (const story of stories) {
-    const shortest = heights.indexOf(Math.min(...heights));
-    cols[shortest].push(story);
-    heights[shortest] += estimate(story);
-  }
-  return cols;
+/** The first tile on the wall: a space for the next story. */
+function AddStoryTile() {
+  const { openShare } = useStories();
+  return (
+    <motion.button
+      layout
+      type="button"
+      onClick={openShare}
+      className="group flex min-h-64 w-full flex-col items-start justify-between rounded-3xl border-[3px] border-dashed border-ink/30 bg-white/50 p-6 text-left transition-colors duration-300 hover:border-ink hover:bg-white sm:p-7"
+      whileTap={{ scale: 0.98 }}
+    >
+      <span className="grid h-14 w-14 place-items-center rounded-full bg-lime text-ink shadow-md transition-transform duration-500 ease-[var(--ease-spring)] group-hover:scale-110 group-hover:rotate-90">
+        <PlusIcon className="h-6 w-6" />
+      </span>
+      <span>
+        <span className="font-display block text-2xl">{ui.addStoryTitle}</span>
+        <span className="mt-2 block text-base text-ink/75">{ui.addStoryBody}</span>
+      </span>
+    </motion.button>
+  );
 }
 
-/* New example stories "arrive" a few seconds after the wall comes into view. */
-const ARRIVALS_MS = [6000, 18000];
-
-/** Values in the Wild: a filterable, animated masonry wall of stories. */
+/**
+ * Values in the Wild: a simple wall that grows one story at a time. The
+ * "Add your story" tile always comes first; approved stories follow it.
+ */
 export function StoryWall() {
-  const { filtered, openShare, receiveIncoming } = useStories();
-  const wide = useMediaQuery("(min-width: 1100px)");
-  const medium = useMediaQuery("(min-width: 640px)");
-  const columns = toColumns(filtered, wide ? 3 : medium ? 2 : 1);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const timers: number[] = [];
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-        ARRIVALS_MS.forEach((ms) => timers.push(window.setTimeout(receiveIncoming, ms)));
-      },
-      { threshold: 0.15 },
-    );
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      timers.forEach(clearTimeout);
-    };
-  }, [receiveIncoming]);
-
+  const { stories } = useStories();
   return (
-    <div ref={ref}>
-      <StoryFilters count={filtered.length} />
-
-      {filtered.length === 0 ? (
-        <div className="mt-10 rounded-3xl border-2 border-dashed border-ink/25 px-6 py-16 text-center">
-          <p className="font-display text-2xl">{ui.wallEmpty}</p>
-          <button
-            type="button"
-            onClick={openShare}
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 font-extrabold text-white transition-transform hover:scale-105"
-          >
-            <PlusIcon className="h-4 w-4" />
-            {ui.shareStory}
-          </button>
-        </div>
-      ) : (
-        <LayoutGroup id="wall">
-          <div className="mt-8 flex items-start gap-4 sm:gap-5">
-            {columns.map((col, i) => (
-              <ul key={i} className="flex min-w-0 flex-1 flex-col gap-4 sm:gap-5">
-                {col.map((story) => (
-                  <li key={story.id}>
-                    <StoryCard story={story} />
-                  </li>
-                ))}
-              </ul>
-            ))}
-          </div>
-        </LayoutGroup>
-      )}
-    </div>
+    <LayoutGroup id="wall">
+      <ul className="grid items-start gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+        <li>
+          <AddStoryTile />
+        </li>
+        {stories.map((story) => (
+          <li key={story.id}>
+            <StoryCard story={story} />
+          </li>
+        ))}
+      </ul>
+    </LayoutGroup>
   );
 }

@@ -1,22 +1,25 @@
 import { youBelongHere } from "@/content/code";
 import { Part } from "@/components/layout/Part";
-import { Opener } from "@/components/stage/Opener";
+import { PageFurniture } from "@/components/ui/PageFurniture";
+import { BelongCollage } from "./BelongCollage";
 import { BigQuote } from "./BigQuote";
 import { Megaphone } from "./Megaphone";
 
-/** Part 2: You Belong Here. */
+/** Part 2: You Belong Here. The opener is a collage of three photos rather than one layered print spread. */
 export function YouBelongHere() {
   return (
     <Part id="you-belong-here">
-      <Opener
-        id="you-belong-here"
-        title={youBelongHere.heading}
-        part={youBelongHere.part}
-        photo="photos/you-belong-here"
-        photoAlt="Two colleagues sitting together and listening during a team session"
-        lettering={[{ media: "lettering/you-belong-here", rect: [115, 59, 481, 407], from: 0.4, tilt: 8 }]}
-        cutout={{ media: "cutouts/you-belong-here", rect: [-1, 211, 563, 399] }}
-      />
+      <div className="relative isolate overflow-hidden bg-ink text-white">
+        <div className="mx-auto max-w-[1680px] px-4 pt-[calc(var(--nav-h)+0.75rem)] pb-4 sm:px-8 lg:pb-2">
+          <PageFurniture part={youBelongHere.part} />
+          <h2 id="you-belong-here-title" className="sr-only">
+            {youBelongHere.heading}
+          </h2>
+          <div className="mt-8 lg:mt-10">
+            <BelongCollage />
+          </div>
+        </div>
+      </div>
       <Megaphone />
       <BigQuote text={youBelongHere.quote} />
     </Part>

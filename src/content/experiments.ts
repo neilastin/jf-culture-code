@@ -5,9 +5,10 @@
 
 export const easterEggs: { where: string; how: string; what: string }[] = [
   { where: "Anywhere", how: "Type \"never settle\" (or the Konami code: ↑ ↑ ↓ ↓ ← → ← → B A)", what: "A burst of brand confetti and a sign-off" },
+  { where: "The Evolution", how: "Click the pulsing dot next to Leeds, 2017", what: "A throwback Polaroid from the early days pops out" },
   { where: "The Origin Story", how: "Click the founders' painting", what: "The frame rocks, a toast pops up and the glasses get raised" },
-  { where: "High Standards. High Care.", how: "Click either side of the see-saw", what: "It tips under the weight, then springs back level. Both matter equally" },
-  { where: "Why we are obsessive", how: "Wait a few seconds, then click a value", what: "Values drift away unless you bring them back down to earth" },
+  { where: "Why we are obsessive", how: "Switch gravity off", what: "The values drift away until you bring them back down to earth" },
+  { where: "We come together under pressure", how: "Click the boot", what: "Another stomp, another shake. It still holds together" },
   { where: "Proactive", how: "Flip the light switch six times, fast", what: "Disco mode" },
 ];
 

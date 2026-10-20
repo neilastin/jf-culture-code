@@ -37,7 +37,7 @@ export const whoWeAre = {
   origin: {
     heading: "The Origin Story",
     body: [
-      "In January 2017, a get-together in a Yorkshire pub was the start of something. Three founders - Robin, Chris, and Matt - were tired of watching an industry confuse its clients, hide behind jargon, and mistake complexity for quality. So they decided to do something about it. They built Journey Further to prove a simple truth: that an agency with genuine values, genuinely lived, would succeed.",
+      "A get-together in a Yorkshire pub was the start of something. Three founders - Robin, Chris, and Matt - were tired of watching an industry confuse its clients, hide behind jargon, and mistake complexity for quality. So they decided to do something about it. They built Journey Further to prove a simple truth: that an agency with genuine values, genuinely lived, would succeed.",
       "Journey Further has evolved a lot since that founding get-together, but this core belief hasn't changed. **We know that if we continue to live by our values we will win, and if we don't, we will lose.**",
     ],
   },

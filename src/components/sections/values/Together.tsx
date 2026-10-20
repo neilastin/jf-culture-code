@@ -1,10 +1,9 @@
-import { values } from "@/content/code";
+import { howWeSucceed, values } from "@/content/code";
 import { Part } from "@/components/layout/Part";
 import { RevealText } from "@/components/motion/RevealText";
 import { Opener } from "@/components/stage/Opener";
-import { LiveStrip } from "@/components/stories/LiveStrip";
-import { PullGraphic } from "./PullGraphic";
 import { TogetherDrift } from "./TogetherDrift";
+import { UnderPressure } from "./UnderPressure";
 import { ValueInAction } from "./ValueInAction";
 
 /** Value 1: Together - One Team, Always. */
@@ -16,11 +15,12 @@ export function Together() {
         id="together"
         title={`${v.name}: ${v.strapline}`}
         label="Our values"
+        part={howWeSucceed.part}
         photo="photos/together"
         photoAlt="A smiling colleague holding up a hand-painted portrait at a team art session"
         lettering={[
-          { media: "lettering/together-word", rect: [141, 59, 467, 292], from: 0.4, tilt: -8 },
-          { media: "lettering/one-team-always", rect: [157, 261, 468, 326], delay: 0.35, tilt: 4, from: 0.7 },
+          { media: "lettering/together-word", rect: [160, 40, 470, 261], from: 0.4, tilt: -8 },
+          { media: "lettering/one-team-always", rect: [172, 238, 458, 280], delay: 0.45, tilt: 5, from: 0.3 },
         ]}
         cutout={{ media: "cutouts/together", rect: [18, 165, 569, 576] }}
       >
@@ -33,23 +33,17 @@ export function Together() {
 
       <TogetherDrift />
 
-      <div className="bg-paper px-4 py-20 sm:px-8 lg:py-28">
-        <PullGraphic
-          text={v.pullGraphic}
-          photo={{ media: "photos/under-pressure", alt: "Colleagues clapping and cheering in the audience at a team event" }}
-          graphic="lettering/under-pressure"
-          placement="right"
-          entrance="stomp"
-        />
-      </div>
+      <UnderPressure />
 
       <ValueInAction
         valueName={v.name}
         copy={v.valueInAction}
         lettering="lettering/value-in-action-purple"
         valueLettering="lettering/value-together"
-        image={{ media: "illustrations/together-desk", alt: "Illustration of two colleagues working side by side at a desk with laptops" }}
-        live={<LiveStrip value="together" />}
+        images={[
+          { media: "illustrations/together-paddleboard", alt: "Illustration of two teams racing each other on big paddleboards across a green lake" },
+          { media: "illustrations/together-video-call", alt: "Illustration of colleagues around a meeting table on a video call with teammates in another office" },
+        ]}
       />
     </Part>
   );

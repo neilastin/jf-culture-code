@@ -26,6 +26,8 @@ type Props = {
   dimPhoto?: boolean;
   /** Copy shown beside the stage on desktop and below it on mobile. */
   children?: ReactNode;
+  /** A smaller stage, so it sits level with a long block of copy beside it. */
+  compact?: boolean;
   className?: string;
 };
 
@@ -33,7 +35,7 @@ type Props = {
  * A section opener built like the print spreads: team photo, hand-lettered
  * headline, and a cut-out of the people layered back in front.
  */
-export function Opener({ id, title, part, label, photo, photoAlt, lettering = [], cutout, extra, dimPhoto, children, className }: Props) {
+export function Opener({ id, title, part, label, photo, photoAlt, lettering = [], cutout, extra, dimPhoto, children, compact, className }: Props) {
   const headingId = `${id}-title`;
   return (
     <div className={cn("relative isolate overflow-hidden bg-ink text-white", className)}>
@@ -58,7 +60,11 @@ export function Opener({ id, title, part, label, photo, photoAlt, lettering = []
             box={FULL_PAGE}
             className={cn(
               "-mx-4 sm:mx-0 sm:rounded-[1.75rem] sm:shadow-2xl sm:shadow-black/40",
-              children ? "lg:w-[min(calc(100svh-8.5rem),54vw)]" : "w-[calc(100%+2rem)] sm:w-[min(calc(100svh-8.5rem),100%)]",
+              children
+                ? compact
+                  ? "lg:w-[min(calc(100svh-10rem),40vw,620px)]"
+                  : "lg:w-[min(calc(100svh-8.5rem),54vw)]"
+                : "w-[calc(100%+2rem)] sm:w-[min(calc(100svh-8.5rem),100%)]",
             )}
           >
             <StageLayer rect={[-1, -1, 596, 596]} box={FULL_PAGE} layer="scene">

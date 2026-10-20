@@ -1,25 +1,25 @@
 import type { CSSProperties, ReactNode } from "react";
-import { values } from "@/content/code";
-import { PopIn } from "@/components/motion/PopIn";
+import { howWeSucceed, values } from "@/content/code";
 import { RevealText } from "@/components/motion/RevealText";
 import { rectStyle, type Box, type Rect } from "@/components/stage/geometry";
 import { Stage } from "@/components/stage/Stage";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { PageFurniture } from "@/components/ui/PageFurniture";
+import { ChargedLettering } from "./ChargedLettering";
 
 /*
  * The print-review fix for page 24. The photo is extended with the plain wall
  * colour (above it on mobile, to its left on desktop) so the full
- * "PROOOO...ACTIVE / MAKE IT HAPPEN" lettering sits in clear space. The
- * presenter cut-out still stands in front of everything.
+ * "PROACTIVE / MAKE IT HAPPEN" lettering has clear space to be restless
+ * in. The presenter cut-out still stands in front of everything.
  */
 const MOBILE_BOX: Box = { x: -1, y: -330, w: 597, h: 926 };
 const DESKTOP_BOX: Box = { x: -360, y: 20, w: 955, h: 575 };
 
 const PHOTO: Rect = [-1, -1, 596, 596];
 const PRESENTER: Rect = [336, 184, 596, 438];
-const LETTERING_MOBILE: Rect = [16, -322, 578, 68];
-const LETTERING_DESKTOP: Rect = [-345, 72, 334, 543];
+const LETTERING_MOBILE: Rect = [36, -290, 560, -62];
+const LETTERING_DESKTOP: Rect = [-330, 176, 290, 445];
 
 /** Positions a layer with one rect on mobile and another from the lg breakpoint. */
 function DualLayer({ mobile, desktop, layer, children }: { mobile: Rect; desktop: Rect; layer: "scene" | "lettering"; children: ReactNode }) {
@@ -52,7 +52,7 @@ export function ProactiveOpener() {
   return (
     <div className="relative isolate overflow-hidden bg-ink text-white">
       <div className="mx-auto max-w-[1680px] px-4 pt-[calc(var(--nav-h)+0.75rem)] pb-12 sm:px-8 lg:pb-16">
-        <PageFurniture label="Our values" />
+        <PageFurniture label="Our values" part={howWeSucceed.part} />
         <h2 id="proactive-title" className="sr-only">
           {v.name}: {v.strapline}
         </h2>
@@ -69,9 +69,7 @@ export function ProactiveOpener() {
               />
             </DualLayer>
             <DualLayer mobile={LETTERING_MOBILE} desktop={LETTERING_DESKTOP} layer="lettering">
-              <PopIn className="relative h-full w-full" from={0.35} tilt={-8}>
-                <MediaImage name="lettering/proactive" alt="" fill sizes="(min-width: 1024px) 50vw, 95vw" className="object-fill" />
-              </PopIn>
+              <ChargedLettering />
             </DualLayer>
             <DualLayer mobile={PRESENTER} desktop={PRESENTER} layer="scene">
               <MediaImage name="cutouts/proactive" alt="" fill sizes="(min-width: 1024px) 28vw, 45vw" className="object-fill" />

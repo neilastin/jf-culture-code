@@ -3,7 +3,7 @@
 import { motion, type Variants } from "framer-motion";
 import { whoWeAre } from "@/content/code";
 import { RevealText } from "@/components/motion/RevealText";
-import { GravityValues } from "./GravityValues";
+import { ValuesGravity } from "./ValuesGravity";
 
 /** Deterministic scatter so server and client render the same starting positions. */
 const word: Variants = {
@@ -25,7 +25,8 @@ const word: Variants = {
 /**
  * "Our values are our gravity": the heading words fall and settle into place
  * as the panel arrives (the panel is the trigger, because the words start
- * outside the viewport), and the three values live in a little gravity sim.
+ * outside the viewport). Below, the values live in a full-width gravity
+ * playground with room to throw them around.
  */
 export function Obsessive() {
   const { obsessive } = whoWeAre;
@@ -34,12 +35,12 @@ export function Obsessive() {
   return (
     <div className="bg-paper px-4 pb-20 sm:px-8 lg:pb-32">
       <motion.div
-        className="mx-auto max-w-[1400px] overflow-hidden rounded-[2rem] bg-mint px-6 py-12 text-ink sm:px-12 sm:py-16 lg:grid lg:grid-cols-[1.2fr_1fr] lg:gap-16 lg:px-16"
+        className="mx-auto max-w-[1400px] overflow-hidden rounded-[2rem] bg-mint px-5 pt-10 pb-8 text-ink sm:px-10 sm:pt-12 sm:pb-10 lg:px-12"
         initial="hidden"
         whileInView="shown"
-        viewport={{ once: true, amount: 0.35 }}
+        viewport={{ once: true, amount: 0.25 }}
       >
-        <div>
+        <div className="lg:grid lg:grid-cols-[1fr_1.15fr] lg:items-start lg:gap-14">
           <h3 className="font-display text-3xl sm:text-5xl">
             <span className="sr-only">{obsessive.heading}</span>
             {words.map((w, i) => (
@@ -48,12 +49,14 @@ export function Obsessive() {
               </motion.span>
             ))}
           </h3>
-          <RevealText className="mt-8 text-lg leading-relaxed sm:text-xl" delay={0.3}>
+          <RevealText className="mt-6 text-lg leading-relaxed sm:text-xl lg:mt-1" delay={0.3}>
             {obsessive.body}
           </RevealText>
         </div>
 
-        <GravityValues />
+        <div className="mt-8 lg:mt-10">
+          <ValuesGravity />
+        </div>
       </motion.div>
     </div>
   );

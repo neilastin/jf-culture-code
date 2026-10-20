@@ -7,6 +7,7 @@ import { FOUNDED, todayStats } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { RevealText } from "@/components/motion/RevealText";
 import { MediaImage } from "@/components/ui/MediaImage";
+import { RightNow } from "./RightNow";
 
 const TILE_COLOURS = ["bg-teal", "bg-lime", "bg-mint", "bg-gold"];
 const DAY = 24 * 60 * 60 * 1000;
@@ -78,7 +79,7 @@ function Tile({ index, children }: { index: number; children: ReactNode }) {
   return (
     <li
       className={cn(
-        "flex min-h-44 flex-col items-center justify-center rounded-3xl p-5 text-center transition-transform duration-500 ease-[var(--ease-spring)] hover:-translate-y-2 hover:-rotate-1 sm:min-h-52 sm:p-8",
+        "flex min-h-40 flex-col items-center justify-center rounded-3xl p-5 text-center transition-transform duration-500 ease-[var(--ease-spring)] hover:-translate-y-2 hover:-rotate-1 sm:min-h-44 sm:p-6",
         TILE_COLOURS[index],
       )}
     >
@@ -87,16 +88,33 @@ function Tile({ index, children }: { index: number; children: ReactNode }) {
   );
 }
 
-/** Today: animated counters, a live age counter, and the team photo. */
+/**
+ * Today: the copy beside its heading, then the team photo and the counters
+ * as one block, then a live look at every office in its own panel.
+ */
 export function Today() {
   return (
     <div className="bg-paper text-ink">
-      <div className="mx-auto max-w-[1400px] px-4 pb-20 sm:px-8 lg:pb-32">
-        <RevealText as="h3" className="font-display text-3xl sm:text-5xl">
-          {whoWeAre.today.heading}
-        </RevealText>
+      <div className="mx-auto max-w-[1400px] px-4 pb-20 sm:px-8 lg:pb-28">
+        {/* Heading, a big lead line, then the detail: stacked and kept to a comfortable measure at every width. */}
+        <div className="max-w-4xl space-y-4">
+          <RevealText as="h3" className="font-display text-3xl sm:text-5xl">
+            {whoWeAre.today.heading}
+          </RevealText>
+          <RevealText className="text-xl leading-snug font-semibold sm:text-2xl lg:text-[1.7rem]">{whoWeAre.today.body[0]}</RevealText>
+          <RevealText className="text-lg leading-relaxed text-ink/85 sm:text-xl">{whoWeAre.today.body[1]}</RevealText>
+        </div>
 
-        <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+        <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <li className="relative col-span-2 min-h-64 overflow-hidden rounded-3xl shadow-lg sm:min-h-80 lg:row-span-2 lg:min-h-0">
+            <MediaImage
+              name="photos/today-all-hands"
+              alt="The team gathered for a company presentation in the Leeds office"
+              fill
+              sizes="(min-width: 1024px) 680px, 92vw"
+              className="object-cover"
+            />
+          </li>
           {todayStats.map((stat, i) => (
             <Tile key={stat.label} index={i}>
               <p className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-none">
@@ -115,19 +133,7 @@ export function Today() {
           </Tile>
         </ul>
 
-        <div className="mt-12 grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <MediaImage
-            name="photos/today-all-hands"
-            alt="The team gathered for a company presentation in the Leeds office"
-            sizes="(min-width: 1024px) 640px, 92vw"
-            className="h-auto w-full rounded-3xl shadow-xl"
-          />
-          <div className="space-y-5 text-lg leading-relaxed sm:text-xl">
-            {whoWeAre.today.body.map((p, i) => (
-              <RevealText key={i}>{p}</RevealText>
-            ))}
-          </div>
-        </div>
+        <RightNow />
       </div>
     </div>
   );

@@ -1,10 +1,8 @@
-import { values } from "@/content/code";
+import { howWeSucceed, values } from "@/content/code";
 import { Part } from "@/components/layout/Part";
 import { RevealText } from "@/components/motion/RevealText";
 import { Opener } from "@/components/stage/Opener";
-import { LiveStrip } from "@/components/stories/LiveStrip";
 import { OpenPrinciples } from "./OpenPrinciples";
-import { PullGraphic } from "./PullGraphic";
 import { ValueInAction } from "./ValueInAction";
 
 /** Value 2: Open - Curious and Candid. */
@@ -16,9 +14,10 @@ export function Open() {
         id="open"
         title={`${v.name}: ${v.strapline}`}
         label="Our values"
+        part={howWeSucceed.part}
         photo="photos/open"
         photoAlt="A smiling colleague listening during a relaxed team session"
-        lettering={[{ media: "lettering/open", rect: [137, 46, 452, 299], from: 0.4, tilt: -6 }]}
+        lettering={[{ media: "lettering/open", rect: [140, 40, 510, 243], from: 0.4, tilt: -6 }]}
         cutout={{ media: "cutouts/open", rect: [-1, 100, 596, 347] }}
       >
         {v.intro.map((p, i) => (
@@ -30,23 +29,12 @@ export function Open() {
 
       <OpenPrinciples />
 
-      <div className="bg-paper px-4 pb-20 sm:px-8 lg:pb-28">
-        <PullGraphic
-          text={v.pullGraphic}
-          photo={{ media: "photos/open-candid", alt: "A colleague smiling across the table during a conversation" }}
-          graphic="lettering/challenge-directly"
-          placement="bottom-right"
-          entrance="climb"
-        />
-      </div>
-
       <ValueInAction
         valueName={v.name}
         copy={v.valueInAction}
         lettering="lettering/value-in-action-sage"
-        valueLettering="lettering/value-open"
-        image={{ media: "photos/open-laughing", alt: "Colleagues sharing a laugh while sitting together in the office" }}
-        live={<LiveStrip value="open" />}
+        valueLettering="lettering/open"
+        images={[{ media: "photos/open-candid-table", alt: "Colleagues smiling and talking around a table at a team workshop" }]}
       />
     </Part>
   );

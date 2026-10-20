@@ -15,9 +15,8 @@ type Props = {
   lettering: MediaKey;
   /** The value's own lettering, repeated here as a reminder of which value this is. */
   valueLettering: MediaKey;
-  image: { media: MediaKey; alt: string };
-  /** The "Live from the team" strip for this value. */
-  live: ReactNode;
+  /** One photo, or two shown as a pair of overlapping cards. */
+  images: { media: MediaKey; alt: string }[];
 };
 
 function DoCard({ heading, body }: { heading: string; body: string }) {
@@ -36,7 +35,7 @@ function DoCard({ heading, body }: { heading: string; body: string }) {
  * Value in Action: one card that flips between "Do this" (Clients and People)
  * and "Please don't do this".
  */
-export function ValueInAction({ valueName, copy, lettering, valueLettering, image, live }: Props) {
+export function ValueInAction({ valueName, copy, lettering, valueLettering, images }: Props) {
   const [side, setSide] = useState<"do" | "dont">("do");
   const id = useId();
   const flipped = side === "dont";
@@ -70,14 +69,9 @@ export function ValueInAction({ valueName, copy, lettering, valueLettering, imag
     <div className="bg-white text-ink">
       <div className="mx-auto max-w-[1400px] px-4 py-20 sm:px-8 lg:py-28">
         <h3 className="sr-only">Value in Action: {valueName}</h3>
-        <div className="flex items-center gap-4 sm:gap-8">
-          <PopIn className="w-[64%] max-w-2xl" tilt={-3}>
-            <MediaImage name={lettering} alt="" sizes="(min-width: 1024px) 680px, 64vw" className="h-auto w-full" />
-          </PopIn>
-          <PopIn className="w-[30%] max-w-[17rem]" tilt={8} from={0.3} delay={0.25}>
-            <MediaImage name={valueLettering} alt="" sizes="(min-width: 1024px) 272px, 30vw" className="h-auto w-full" />
-          </PopIn>
-        </div>
+        <PopIn className="w-[78%] max-w-2xl lg:w-[48%]" tilt={-3}>
+          <MediaImage name={lettering} alt="" sizes="(min-width: 1024px) 680px, 78vw" className="h-auto w-full" />
+        </PopIn>
 
         <div className="mt-8 grid gap-10 lg:grid-cols-[1.25fr_1fr] lg:gap-16">
           <div>
@@ -126,21 +120,59 @@ export function ValueInAction({ valueName, copy, lettering, valueLettering, imag
             </div>
           </div>
 
-          <motion.div
-            className="relative overflow-hidden rounded-[1.75rem] shadow-xl lg:self-stretch"
-            animate={{ rotate: flipped ? -2 : 0, scale: flipped ? 0.97 : 1, filter: flipped ? "grayscale(0.85)" : "grayscale(0)" }}
-            transition={{ type: "spring", stiffness: 120, damping: 16 }}
-          >
-            <MediaImage
-              name={image.media}
-              alt={image.alt}
-              sizes="(min-width: 1024px) 520px, 92vw"
-              className="h-full max-h-[620px] w-full object-cover"
-            />
-          </motion.div>
+          {/*
+           * The value's own lettering straddles the top edge of the photo. It sits outside the photo's
+           * motion, so on "Please don't do this" the photo greys and tilts while the lettering stays bright.
+           */}
+          <div className="relative order-first mt-24 sm:mt-32 lg:order-none lg:-mt-32 lg:self-stretch">
+            <motion.div
+              className={cn("relative h-full", images.length === 1 ? "overflow-hidden rounded-[1.75rem] shadow-xl" : "flex flex-col pt-6")}
+              animate={{ rotate: flipped ? -2 : 0, scale: flipped ? 0.97 : 1, filter: flipped ? "grayscale(0.85)" : "grayscale(0)" }}
+              transition={{ type: "spring", stiffness: 120, damping: 16 }}
+            >
+              {images.length === 1 ? (
+                <MediaImage
+                  name={images[0].media}
+                  alt={images[0].alt}
+                  sizes="(min-width: 1024px) 520px, 92vw"
+                  className="h-full max-h-[620px] min-h-[440px] w-full object-cover lg:min-h-0"
+                />
+              ) : (
+                images.map((img, i) => (
+                  <MediaImage
+                    key={img.media}
+                    name={img.media}
+                    alt={img.alt}
+                    sizes="(min-width: 1024px) 460px, 82vw"
+                    className={cn(
+                      "h-auto w-[88%] rounded-[1.5rem] border-[6px] border-white shadow-xl",
+                      i === 0 ? "-rotate-2 self-start" : "relative -mt-[9%] rotate-2 self-end",
+                    )}
+                  />
+                ))
+              )}
+            </motion.div>
+            <PopIn
+              className="absolute top-0 left-1/2 z-10 flex h-44 w-[100%] -translate-x-1/2 -translate-y-1/2 justify-center sm:h-56"
+              tilt={6}
+              from={0.3}
+              delay={0.2}
+            >
+              <motion.div
+                className="flex h-full w-full justify-center"
+                animate={flipped ? { rotate: [0, -4, 3, 0], y: [0, -6, 0] } : { rotate: 0, y: 0 }}
+                transition={{ type: "tween", duration: 0.5, ease: "easeOut" }}
+              >
+                <MediaImage
+                  name={valueLettering}
+                  alt=""
+                  sizes="(min-width: 1024px) 520px, 90vw"
+                  className="h-full w-auto max-w-full object-contain drop-shadow-[0_12px_18px_rgb(0_0_0/0.3)]"
+                />
+              </motion.div>
+            </PopIn>
+          </div>
         </div>
-
-        {live}
       </div>
     </div>
   );

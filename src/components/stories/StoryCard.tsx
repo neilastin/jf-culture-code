@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { reactions } from "@/content/site";
 import type { Story } from "@/content/types";
 import { cn } from "@/lib/cn";
 import { StoryBadges } from "./StoryBadges";
@@ -15,18 +14,15 @@ const VALUE_EDGE = {
   proactive: "before:bg-lime",
 } as const;
 
-type Props = { story: Story; variant?: "wall" | "strip" };
-
 /** One story. The whole card opens the detail view; admin tools sit on top when moderation mode is on. */
-export function StoryCard({ story, variant = "wall" }: Props) {
-  const { openStory, justIn, reactionCounts, admin, moderate } = useStories();
+export function StoryCard({ story }: { story: Story }) {
+  const { openStory, justIn, admin, moderate } = useStories();
   const isNew = justIn.has(story.id);
-  const total = reactionCounts(story).filter((r) => r.count > 0);
 
   return (
     <motion.article
       layout
-      layoutId={variant === "wall" ? `wall-${story.id}` : undefined}
+      layoutId={`wall-${story.id}`}
       initial={{ opacity: 0, scale: 0.85, y: 30 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.85 }}
@@ -36,10 +32,9 @@ export function StoryCard({ story, variant = "wall" }: Props) {
         "before:absolute before:inset-x-0 before:top-0 before:h-2",
         VALUE_EDGE[story.value],
         isNew && "ring-4 ring-teal ring-offset-2 ring-offset-paper",
-        variant === "strip" && "h-full",
       )}
     >
-      {story.image && variant === "wall" && (
+      {story.image && (
         <StoryImage image={story.image} className="mt-2 aspect-[16/10]" sizes="(min-width: 1024px) 420px, 92vw" />
       )}
       <div className="flex flex-1 flex-col gap-3 p-5 pt-6 sm:p-6 sm:pt-7">
@@ -53,23 +48,12 @@ export function StoryCard({ story, variant = "wall" }: Props) {
             {story.title}
           </button>
         </h4>
-        <p className={cn("text-base leading-relaxed text-ink/85", variant === "strip" ? "line-clamp-3" : "line-clamp-5")}>
-          {story.body}
-        </p>
-        <div className="mt-auto flex flex-wrap items-end justify-between gap-2 pt-2">
+        <p className="line-clamp-5 text-base leading-relaxed text-ink/85">{story.body}</p>
+        <div className="mt-auto pt-2">
           <StoryMeta story={story} />
-          {total.length > 0 && (
-            <p className="text-sm font-bold text-ink/80" aria-label="Reactions">
-              {total.map((r) => (
-                <span key={r.id} className="ml-2 first:ml-0">
-                  {reactions.find((x) => x.id === r.id)?.emoji} {r.count}
-                </span>
-              ))}
-            </p>
-          )}
         </div>
 
-        {admin && variant === "wall" && (
+        {admin && (
           <div className="relative z-10 flex flex-wrap gap-2 border-t border-dashed border-ink/20 pt-3">
             {story.status === "pending" && (
               <button type="button" onClick={() => moderate(story.id, "approve")} className="rounded-full bg-lime px-3 py-1.5 text-xs font-extrabold">

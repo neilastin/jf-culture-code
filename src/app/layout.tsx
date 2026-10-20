@@ -30,12 +30,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "The Journey Further Culture Code",
     description: "Great strategy fails without great culture. This is ours.",
-    images: ["/images/illustrations/cover-people.webp"],
+    images: ["/images/photos/who-we-are.webp"],
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#c8df88",
+  themeColor: "#3dbb9a",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

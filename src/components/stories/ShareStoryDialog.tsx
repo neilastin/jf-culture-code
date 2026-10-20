@@ -9,7 +9,7 @@ import { useScrollTo } from "@/components/motion/SmoothScroll";
 import { Dialog } from "@/components/ui/Dialog";
 import { TickIcon } from "@/components/ui/Icons";
 import { Select } from "@/components/ui/Select";
-import { NO_FILTERS, useStories, type NewStory } from "./StoriesProvider";
+import { useStories, type NewStory } from "./StoriesProvider";
 
 const MIN_BODY = 20;
 const MAX_BODY = 600;
@@ -63,7 +63,7 @@ const labelClass = "block text-base font-extrabold";
 
 /** Part 6's call to action: a short, friendly form that posts straight to the wall. */
 export function ShareStoryDialog() {
-  const { shareOpen, closeShare, submit, setFilters } = useStories();
+  const { shareOpen, closeShare, submit } = useStories();
   const scrollTo = useScrollTo();
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [image, setImage] = useState<string | null>(null);
@@ -115,7 +115,6 @@ export function ShareStoryDialog() {
 
   const seeIt = () => {
     close();
-    setFilters(NO_FILTERS);
     window.setTimeout(() => scrollTo("values-in-the-wild"), 150);
   };
 
@@ -134,7 +133,7 @@ export function ShareStoryDialog() {
           <h2 id="share-title" className="font-display mt-6 text-2xl sm:text-3xl">
             {ui.thanks}
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-lg">It&apos;s on the wall now with a &ldquo;{ui.pending}&rdquo; tag.</p>
+          <p className="mx-auto mt-4 max-w-md text-lg">You&apos;ll see it on the wall with a &ldquo;{ui.pending}&rdquo; tag until it&apos;s approved.</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <button type="button" onClick={seeIt} className="rounded-full bg-ink px-6 py-3 font-extrabold text-white transition-transform hover:scale-105">
               See it on the wall
@@ -150,7 +149,7 @@ export function ShareStoryDialog() {
             <h2 id="share-title" className="font-display text-2xl sm:text-3xl">
               {ui.seenAValue}
             </h2>
-            <p className="mt-3 text-base text-ink/75">Two minutes, tops. The People team reviews every story before it goes live for everyone.</p>
+            <p className="mt-3 text-base text-ink/75">Two minutes, tops. The People team reads every story, and once it&apos;s approved it goes on the wall for everyone.</p>
           </div>
 
           <fieldset aria-describedby={errors.value ? "err-value" : undefined}>

@@ -1,10 +1,11 @@
 "use client";
 
 import { motion, useAnimate } from "framer-motion";
-import type { MouseEvent } from "react";
+import { useRef, type MouseEvent } from "react";
 import { whoWeAre } from "@/content/code";
 import { announceEgg, confetti } from "@/lib/eggs";
 import { RevealText } from "@/components/motion/RevealText";
+import { Hint, useHint } from "@/components/ui/Hint";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { RichText } from "@/components/ui/RichText";
 
@@ -15,8 +16,11 @@ import { RichText } from "@/components/ui/RichText";
 export function OriginStory() {
   const { origin } = whoWeAre;
   const [scope, animate] = useAnimate();
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [hint, dismissHint] = useHint(frameRef, 2500);
 
   const cheers = (e: MouseEvent<HTMLButtonElement>) => {
+    dismissHint();
     animate(scope.current, { rotate: [0, -7, 6, -3, 1.5, 0] }, { type: "tween", duration: 0.9, ease: "easeOut" });
     confetti({ x: e.clientX, y: e.clientY }, 70);
     announceEgg("Cheers! 🍻 To the get-together that started it all.");
@@ -38,7 +42,8 @@ export function OriginStory() {
         </div>
 
         <motion.div
-          className="mx-auto w-full max-w-[560px] origin-[50%_8%]"
+          ref={frameRef}
+          className="relative mx-auto w-full max-w-[560px] origin-[50%_8%]"
           initial={{ rotate: -16, y: -40, opacity: 0 }}
           whileInView={{ rotate: 0, y: 0, opacity: 1 }}
           whileHover={{ rotate: 2.5 }}
@@ -59,6 +64,9 @@ export function OriginStory() {
               className="h-auto w-full drop-shadow-[0_30px_40px_rgb(0_0_0/0.45)]"
             />
           </button>
+          <Hint show={hint} tone="light" className="absolute bottom-[6%] left-1/2 -translate-x-1/2">
+            Tap the painting
+          </Hint>
         </motion.div>
       </div>
     </div>

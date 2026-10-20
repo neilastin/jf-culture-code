@@ -2,11 +2,9 @@
 
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
-import { navSections, ui } from "@/content/site";
+import { navSections, PART_COUNT, ui } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { useScrollTo } from "@/components/motion/SmoothScroll";
-import { useStories } from "@/components/stories/StoriesProvider";
-import { PlusIcon } from "@/components/ui/Icons";
 import { Logo } from "@/components/ui/Logo";
 
 /** Tracks which section is in the middle of the viewport. */
@@ -43,11 +41,11 @@ export function SiteNav() {
   const active = useActiveSection();
   const scrolled = useScrolledPast(40);
   const scrollTo = useScrollTo();
-  const { openShare } = useStories();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
-  const activeLabel = navSections.find((s) => s.id === active)?.label ?? "";
-  const activeIndex = navSections.findIndex((s) => s.id === active);
+  const activeSection = navSections.find((s) => s.id === active) ?? navSections[0];
+  const activePart = activeSection.part;
+  const activeLabel = activeSection.part ? activeSection.label : "";
 
   return (
     <>
@@ -81,9 +79,11 @@ export function SiteNav() {
             )}
             aria-live="polite"
           >
-            <span className="font-display text-[0.65rem] text-teal tabular-nums">
-              {String(activeIndex + 1).padStart(2, "0")} / {String(navSections.length).padStart(2, "0")}
-            </span>
+            {activePart && (
+              <span className="font-display rounded-md bg-part px-2 py-1 text-[0.6rem] text-charcoal tabular-nums">
+                Part {activePart} / {PART_COUNT}
+              </span>
+            )}
             <span className="relative h-5 flex-1 overflow-hidden">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span
@@ -100,14 +100,10 @@ export function SiteNav() {
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={openShare}
-            className="group ml-auto inline-flex items-center gap-2 rounded-full bg-lime px-4 py-2.5 text-sm font-extrabold text-charcoal shadow-md shadow-black/15 transition-transform duration-300 ease-[var(--ease-spring)] hover:-rotate-2 hover:scale-105 active:scale-95"
-          >
-            <PlusIcon className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
-            {ui.shareStory}
-          </button>
+          {/* Share a story lives in the last section for launch; the brand sits here instead. */}
+          <span aria-hidden="true" className="font-display ml-auto text-sm whitespace-nowrap text-white drop-shadow-[0_1px_6px_rgb(0_0_0/0.25)] sm:text-base">
+            Journey Further
+          </span>
         </nav>
 
         <motion.div
@@ -117,32 +113,60 @@ export function SiteNav() {
         />
       </header>
 
-      {/* Section rail: desktop only */}
-      <nav
-        aria-label="Sections"
-        className="fixed top-1/2 right-4 z-40 hidden -translate-y-1/2 xl:block"
-      >
-        <ol className="flex flex-col items-end gap-2.5">
+      {/*
+       * Section rail, desktop only. Grouped by the Code's six parts: each part shows its number, the
+       * active part shows its name, and the three values sit inside Part 4 as smaller dots.
+       */}
+      <nav aria-label="Sections" className="fixed top-1/2 right-4 z-40 hidden -translate-y-1/2 xl:block">
+        <ol className="flex flex-col items-end gap-1">
           {navSections.map((s) => {
             const isActive = s.id === active;
+            const partActive = s.part !== undefined && s.part === activePart;
             return (
-              <li key={s.id}>
+              <li key={s.id} className={cn("flex w-full justify-end", !s.sub && (s.part ?? 0) > 1 && "mt-1.5")}>
                 <button
                   type="button"
                   onClick={() => scrollTo(s.id)}
                   aria-current={isActive ? "true" : undefined}
-                  className="group flex items-center gap-3 py-0.5"
+                  className="group flex min-w-7 items-center justify-end gap-2.5 py-0.5"
                 >
-                  <span aria-hidden="true" className="font-display pointer-events-none rounded-full bg-ink/90 px-3 py-1.5 text-[0.6rem] text-white opacity-0 shadow transition-all duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+                  {/* Hover shows any label; arriving in a section flashes its label for a moment, then it gets out of the way. */}
+                  <span
+                    key={isActive ? `on-${s.id}` : s.id}
+                    aria-hidden="true"
+                    className={cn(
+                      "font-display pointer-events-none rounded-full bg-ink/90 px-3 py-1.5 text-[0.6rem] text-white opacity-0 shadow transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100",
+                      isActive && "motion-safe:animate-[flash-label_2.6s_ease_forwards]",
+                    )}
+                  >
+                    {s.part && !s.sub ? `Part ${s.part} · ` : ""}
                     {s.label}
                   </span>
-                  <span
-                    className={cn(
-                      "block rounded-full border-2 border-white/80 shadow-[0_0_0_1px_rgb(0_0_0/0.25)] transition-all duration-300 ease-[var(--ease-spring)]",
-                      isActive ? "h-6 w-2.5 bg-teal" : "h-2.5 w-2.5 bg-ink/40 group-hover:bg-white",
-                    )}
-                  />
-                  <span className="sr-only">{s.label}</span>
+                  {/* Parts get a numbered disc with its own fill, so the number reads on light and dark pages alike. */}
+                  {s.part && !s.sub ? (
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "font-display grid place-items-center rounded-full border-2 text-[0.55rem] leading-none tabular-nums shadow-[0_0_0_1px_rgb(0_0_0/0.2)] transition-all duration-300 ease-[var(--ease-spring)]",
+                        isActive
+                          ? "h-7 w-7 border-white bg-teal text-charcoal"
+                          : partActive
+                            ? "h-5 w-5 border-white bg-teal text-charcoal"
+                            : "h-5 w-5 border-white/90 bg-charcoal text-white group-hover:bg-white group-hover:text-charcoal",
+                      )}
+                    >
+                      {s.part}
+                    </span>
+                  ) : (
+                    <span
+                      className={cn(
+                        "mx-[3px] block rounded-full border-2 border-white/90 shadow-[0_0_0_1px_rgb(0_0_0/0.2)] transition-all duration-300 ease-[var(--ease-spring)]",
+                        s.sub ? "mr-[5px] h-2 w-2" : "h-3 w-3",
+                        isActive ? (s.sub ? "h-4 bg-teal" : "h-5 bg-teal") : partActive ? "bg-teal/70" : "bg-charcoal group-hover:bg-white",
+                      )}
+                    />
+                  )}
+                  <span className="sr-only">{s.part ? `Part ${s.part}: ${s.label}` : s.label}</span>
                 </button>
               </li>
             );

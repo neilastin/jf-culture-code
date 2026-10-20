@@ -1,9 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { reactions } from "@/content/site";
-import { cn } from "@/lib/cn";
 import { Dialog } from "@/components/ui/Dialog";
 import { StoryBadges } from "./StoryBadges";
 import { StoryImage } from "./StoryImage";
@@ -12,9 +9,9 @@ import { useStories } from "./StoriesProvider";
 
 const HASH_PREFIX = "#story=";
 
-/** Story detail with reactions, sharing and (in moderation mode) admin tools. */
+/** Story detail with a share link and (in moderation mode) admin tools. */
 export function StoryModal() {
-  const { activeStory: story, closeStory, openStory, reactionCounts, toggleReaction, justIn, admin, moderate } = useStories();
+  const { activeStory: story, closeStory, openStory, justIn, admin, moderate } = useStories();
   const [copied, setCopied] = useState(false);
 
   // Shared links open the story straight away.
@@ -64,34 +61,11 @@ export function StoryModal() {
               <StoryMeta story={story} />
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="React">
-              {reactionCounts(story).map((r) => {
-                const meta = reactions.find((x) => x.id === r.id)!;
-                return (
-                  <motion.button
-                    key={r.id}
-                    type="button"
-                    aria-pressed={r.mine}
-                    aria-label={`${meta.label}: ${r.count}`}
-                    onClick={() => toggleReaction(story.id, r.id)}
-                    whileTap={{ scale: 0.85 }}
-                    className={cn(
-                      "flex items-center gap-2 rounded-full border-2 px-4 py-2 text-base font-extrabold transition-colors",
-                      r.mine ? "border-ink bg-lime" : "border-ink/15 hover:border-ink/40",
-                    )}
-                  >
-                    <motion.span key={`${r.id}-${r.mine}`} initial={{ scale: r.mine ? 1.6 : 1 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
-                      {meta.emoji}
-                    </motion.span>
-                    <span className="tabular-nums">× {r.count}</span>
-                  </motion.button>
-                );
-              })}
-
+            <div className="mt-8 flex justify-end">
               <button
                 type="button"
                 onClick={share}
-                className="ml-auto rounded-full bg-ink px-5 py-2.5 text-base font-extrabold text-white transition-transform hover:scale-105"
+                className="rounded-full bg-ink px-5 py-2.5 text-base font-extrabold text-white transition-transform hover:scale-105"
               >
                 {copied ? "Link copied" : "Share"}
               </button>
