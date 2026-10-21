@@ -174,6 +174,26 @@ NEW_CROP = {
     "youbelong3.jpg": (0, 0, 5764, 4323),
 }
 
+# Background guests to throw out of focus (polygon round them, and the foreground people in front
+# of them that must stay sharp; source pixels).
+DEFOCUS = {
+    "shapecode.jpg": {
+        "area": [(2620, 900), (3850, 900), (3900, 1900), (4150, 2050), (4150, 4672), (2900, 4672),
+                 (2600, 3500), (2380, 2900), (2560, 1900)],
+        "keep": [
+            # The man, his arm and thumb.
+            [(0, 0), (2580, 0), (2590, 700), (2610, 1450), (2560, 1800), (2420, 2700), (2500, 3000),
+             (2600, 3330), (2720, 3440), (3000, 3460), (3060, 3400), (3070, 3100), (3100, 3030),
+             (3170, 3035), (3210, 3150), (3220, 3420), (3350, 3550), (3470, 3800), (3500, 4672), (0, 4672)],
+            # The pointing woman, her hand and her wine glass.
+            [(4330, 0), (4330, 1100), (4250, 1600), (4150, 2050), (4000, 2150), (3930, 2400),
+             (3900, 2850), (3860, 3150), (3740, 3200), (3740, 3500), (3800, 3650), (3720, 3780),
+             (4080, 3830), (4150, 4672), (7008, 4672), (7008, 0)],
+        ],
+        "sigma": 45,
+    },
+}
+
 # Lettering whose outline has pale, grainy flecks round the outside, which look like a white halo over
 # photos. Their outer edge is softened and the flecks toned down to the outline colour.
 FEATHER = {"open-3-cutout.png", "proactive-MIH-2-edit.png"}
@@ -207,6 +227,22 @@ STANDARDS_CARE_PHOTOS = [
     "LaRedoute-Sep-OOH-JF-2.jpg",
     "London-Nov-3.jpg",
 ]
+
+
+def defocus(im: Image.Image, area, keep, sigma: float) -> Image.Image:
+    """Blurs `area` as if out of focus, leaving the `keep` shapes sharp and keeping their colour out of the blur."""
+    def mask(polygons, soft):
+        m = Image.new("L", im.size, 0)
+        for poly in polygons:
+            ImageDraw.Draw(m).polygon(poly, fill=255)
+        return ndimage.gaussian_filter(np.array(m, float) / 255, soft)
+
+    px = np.array(im, float)
+    sharp = mask(keep, 3)
+    weight = ndimage.gaussian_filter(1 - sharp, sigma) + 1e-6
+    blur = np.stack([ndimage.gaussian_filter(px[..., c] * (1 - sharp), sigma) / weight for c in range(3)], -1)
+    blend = (mask([area], 60) * (1 - sharp))[..., None]
+    return Image.fromarray((px * (1 - blend) + blur * blend).round().clip(0, 255).astype(np.uint8), "RGB")
 
 
 def build_standards_care_photos() -> None:
@@ -304,6 +340,8 @@ def build_new_art() -> None:
         im = Image.open(NEW_ASSETS / file)
         if name.startswith("photos/"):
             im = ImageOps.exif_transpose(im).convert("RGB")
+            if file in DEFOCUS:
+                im = defocus(im, **DEFOCUS[file])
             if file in NEW_CROP:
                 im = im.crop(NEW_CROP[file])
         else:
