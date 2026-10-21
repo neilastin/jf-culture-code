@@ -50,7 +50,11 @@ export function ValuesGravity() {
       bodies.current.forEach((b, i) => {
         b.r = (BODIES[i].size * scale()) / 2;
         const el = refs.current[i];
-        if (el) el.style.width = `${b.r * 2}px`;
+        if (!el) return;
+        el.style.width = `${b.r * 2}px`;
+        // Lettering scales with the ball, so even the smallest balls keep whole, centred words.
+        // Straplines get a touch more room per letter because their words are shorter.
+        el.style.fontSize = `${b.r * (BODIES[i].size > 140 ? 0.165 : 0.2)}px`;
       });
 
     // Start above the box (or already resting on the floor with reduced motion).
@@ -240,10 +244,10 @@ export function ValuesGravity() {
                 refs.current[i] = el;
               }}
               onPointerDown={(e) => onDown(i, e)}
-              className={`font-display absolute top-0 left-0 grid aspect-square cursor-grab place-items-center rounded-full p-3 text-center text-[clamp(0.62rem,1.35vw,1.1rem)] leading-tight shadow-xl select-none active:cursor-grabbing ${STYLE[b.id]}`}
+              className={`font-display absolute top-0 left-0 grid aspect-square cursor-grab place-items-center rounded-full text-center shadow-xl select-none active:cursor-grabbing ${STYLE[b.id]}`}
               style={{ width: `${(b.size / DESIGN_WIDTH) * 100}%`, transform: "translate3d(-400px,-400px,0)" }}
             >
-              {b.label}
+              <span className="block w-[84%] leading-[1.05]">{b.label}</span>
             </div>
           ))}
         </div>

@@ -50,7 +50,7 @@ export const media = {
   "lettering/value-in-action-lime": { src: "/images/lettering/value-in-action-lime.webp", width: 1200, height: 328 },
   "lettering/value-in-action-purple": { src: "/images/lettering/value-in-action-purple.webp", width: 1200, height: 348 },
   "lettering/value-in-action-sage": { src: "/images/lettering/value-in-action-sage.webp", width: 1200, height: 328 },
-  "lettering/value-together": { src: "/images/lettering/value-together.webp", width: 900, height: 756 },
+  "lettering/value-together": { src: "/images/lettering/value-together.webp", width: 900, height: 697 },
   "lettering/we-come-together": { src: "/images/lettering/we-come-together.webp", width: 576, height: 405 },
   "lettering/who-we-are": { src: "/images/lettering/who-we-are.webp", width: 944, height: 1149 },
   "lettering/you-belong-here": { src: "/images/lettering/you-belong-here.webp", width: 1000, height: 948 },

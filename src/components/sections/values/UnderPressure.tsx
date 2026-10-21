@@ -105,7 +105,7 @@ export function UnderPressure() {
       };
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
-        const t = ScrollTrigger.create({ trigger: pinRef.current, start: "center center", end: "+=85%", pin: true, onEnter: begin });
+        const t = ScrollTrigger.create({ trigger: pinRef.current, start: "center center+=32", end: "+=85%", pin: true, onEnter: begin });
         return () => t.kill();
       });
       mm.add(MOTION_REDUCED, () => {
@@ -123,9 +123,14 @@ export function UnderPressure() {
   };
 
   return (
-    <div ref={pinRef} className="relative z-10 overflow-x-clip bg-paper px-4 pb-24 sm:px-8 lg:pb-28">
-      <div ref={scope}>
-        <figure className="relative mx-auto mt-[22%] w-full max-w-[1100px] sm:mt-[4%]">
+    <div ref={pinRef} className="relative z-10 overflow-x-clip bg-paper px-4 pb-24 sm:px-8">
+      {/*
+       * On tablets and up the whole piece (photo, the lettering standing proud of it, and the prompts)
+       * is sized to the screen height, so it fits in full while it's held in place for the stomp.
+       * The top padding is a % of this box's own width, matching how far the lettering pokes up.
+       */}
+      <div ref={scope} className="mx-auto w-full pt-[22%] sm:max-w-[min(1100px,calc((100svh-11.5rem)*1.5))] sm:pt-[11%]">
+        <figure className="relative w-full">
           <div className="overflow-hidden rounded-[2rem] shadow-2xl">
             <MediaImage
               name="photos/under-pressure"

@@ -69,7 +69,7 @@ export function ValueInAction({ valueName, copy, lettering, valueLettering, imag
     <div className="bg-white text-ink">
       <div className="mx-auto max-w-[1400px] px-4 py-20 sm:px-8 lg:py-28">
         <h3 className="sr-only">Value in Action: {valueName}</h3>
-        <PopIn className="w-[78%] max-w-2xl lg:w-[48%]" tilt={-3}>
+        <PopIn className="mx-auto w-[78%] max-w-2xl lg:mx-0 lg:w-[48%]" tilt={-3}>
           <MediaImage name={lettering} alt="" sizes="(min-width: 1024px) 680px, 78vw" className="h-auto w-full" />
         </PopIn>
 

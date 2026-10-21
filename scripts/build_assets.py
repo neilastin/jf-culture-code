@@ -23,7 +23,6 @@ OUT = ROOT / "public" / "images"
 # Supplied PNGs -> output name, max width
 SUPPLIED = {
     "VIA-edit-LIM-WHITE.png": ("lettering/value-in-action-lime", 1200),
-    "together-subheader-edit.png": ("lettering/value-together", 900),
     "VIA-edit-sage-lime.png": ("lettering/value-in-action-sage", 1200),
     "megaphone-edit.png": ("illustrations/megaphone", 1200),
 }
@@ -125,7 +124,6 @@ def drop_line(im: Image.Image, where: str, cutoff: float) -> Image.Image:
 CROP = {
     "VIA-edit-LIM-WHITE.png": "auto",
     "VIA-edit-sage-lime.png": "auto",
-    "together-subheader-edit.png": "auto",
 }
 
 # Inner corners of the gold frame's opening (TL, TR, BR, BL) in gold-frame-founders.png. The frame
@@ -242,6 +240,20 @@ def whiten(im: Image.Image) -> Image.Image:
     return Image.fromarray(px.astype(np.uint8))
 
 
+def build_together_stack() -> None:
+    """TOGETHER with ONE TEAM, ALWAYS overlapping its bottom edge and in front, as laid out in the Together opener."""
+    word = trim(Image.open(NEW_ASSETS / "together-only.png").convert("RGBA"))
+    line = trim(Image.open(NEW_ASSETS / "one-team-always-only.png").convert("RGBA"))
+    # Opener rects in PDF points: TOGETHER [160, 40, 470, 261], ONE TEAM, ALWAYS [172, 238, 458, 280].
+    scale = 1000 / 310
+    word = word.resize((1000, round(221 * scale)), Image.LANCZOS)
+    line = line.resize((round(286 * scale), round(42 * scale)), Image.LANCZOS)
+    canvas = Image.new("RGBA", (1000, round(240 * scale)), (0, 0, 0, 0))
+    canvas.alpha_composite(word, (0, 0))
+    canvas.alpha_composite(line, (round(12 * scale), round(198 * scale)))
+    save(trim(canvas), "lettering/value-together", 900)
+
+
 def build_balloon() -> None:
     """The balloon rig as stacked layers on one shared canvas, with the values painted on and the logo on the basket."""
     names = {
@@ -338,6 +350,7 @@ def build_new_art() -> None:
         save(Image.fromarray(person), f"illustrations/handshake-{side}", 900)
     print(f"handshake gap at {gap / pair.width:.4f} of the width")
 
+    build_together_stack()
     build_balloon()
     build_standards_care_photos()
 
@@ -351,6 +364,28 @@ def build_new_art() -> None:
     mask = mask.resize(frame.size, Image.LANCZOS)
     frame.paste(warped, (0, 0), mask)
     save(frame, "illustrations/gold-frame-founders", 1100)
+
+
+# The Promise lettering sits on dark cards, where its pale face and pale lime/mint 3D shadow blur
+# together. The shadow is deepened (same hue, darker) and a thin dark outline added, so the
+# letters read; nothing is redrawn.
+DEEPEN = {417: (70, 120, 20), 421: (24, 110, 92)}
+
+
+def deepen(im: Image.Image, target: tuple[int, int, int]) -> Image.Image:
+    px = np.array(im.convert("RGBA")).astype(float)
+    hi = px[..., :3].max(axis=2)
+    lo = px[..., :3].min(axis=2)
+    shadow = (hi - lo) / np.maximum(hi, 1) > 0.28  # the coloured extrusion, not the pale face
+    for c in range(3):
+        px[..., c] = np.where(shadow, target[c] * (0.55 + 0.6 * hi / 255), px[..., c])
+    solid = px[..., 3] > 40
+    ring = ndimage.binary_dilation(solid, iterations=5) & ~solid
+    out = np.zeros_like(px)
+    out[ring] = (28, 27, 30, 255)
+    base = Image.fromarray(out.astype(np.uint8))
+    base.alpha_composite(Image.fromarray(np.clip(px, 0, 255).astype(np.uint8)))
+    return base
 
 
 def save(im: Image.Image, name: str, max_w: int) -> None:
@@ -384,6 +419,8 @@ def main() -> None:
             im.putalpha(mask.resize(im.size))
         if xref in DROP_LINE:
             im = drop_line(im, *DROP_LINE[xref])
+        if xref in DEEPEN:
+            im = deepen(im, DEEPEN[xref])
         save(im, name, max_w)
 
 

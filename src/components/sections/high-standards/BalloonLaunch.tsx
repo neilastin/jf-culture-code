@@ -75,7 +75,7 @@ const PHOTOS: { media: MediaKey; alt: string; place: string; rotate: number; dri
 const COPY: Record<Mode, string> = {
   grounded: "",
   standards: "No soaring yet. We'll wobble if we focus only on standards and not care!",
-  care: "No soaring yet. We can't reach new heights if we don't always push for high standards!",
+  care: "No soaring yet. We can't reach new heights if we don't always push for high standards too!",
   soaring: "Now we're soaring! High standards and high care together, that's what it takes.",
 };
 
@@ -89,7 +89,7 @@ const POSE: Record<Mode, TargetAndTransition> = {
   grounded: { y: "0%", rotate: 0 },
   standards: { y: "-6%", rotate: 11 },
   care: { y: "-6%", rotate: -11 },
-  soaring: { y: "-14%", rotate: 0 },
+  soaring: { y: "-9%", rotate: 0 },
 };
 const POSE_MOTION: Transition = { type: "spring", stiffness: 60, damping: 9 };
 const MOTION_LOOP: Record<Mode, string> = {
@@ -123,7 +123,7 @@ function Burner({ side, on, part }: { side: "standards" | "care"; on: boolean; p
   const balloon = media[side === "standards" ? "illustrations/balloon-left" : "illustrations/balloon-right"].src;
   return part === "flame" ? (
     <div aria-hidden="true" className={cn("absolute inset-0 transition-opacity duration-200", on ? "opacity-100" : "opacity-0")}>
-      <div className="h-full w-full motion-safe:animate-[flame_0.35s_ease-in-out_infinite_alternate]" style={{ transformOrigin: FLAME[side] }}>
+      <div className="relative h-full w-full motion-safe:animate-[flame_0.35s_ease-in-out_infinite_alternate]" style={{ transformOrigin: FLAME[side] }}>
         <MediaImage
           name={side === "standards" ? "illustrations/balloon-fire-left" : "illustrations/balloon-fire-right"}
           alt=""
@@ -155,7 +155,7 @@ function Burner({ side, on, part }: { side: "standards" | "care"; on: boolean; p
  * Two stacks side by side, HIGH over each word. Sizes are set as heights so the lettering keeps its shape.
  */
 function Headline() {
-  const high = "h-[clamp(4.6rem,min(10.5vw,14svh),9rem)] w-auto";
+  const high = "h-[clamp(3.6rem,min(8vw,10.5svh),7rem)] w-auto";
   return (
     <motion.div
       className="flex items-start justify-center gap-[6%] drop-shadow-[0_8px_18px_rgb(0_0_0/0.4)]"
@@ -165,12 +165,12 @@ function Headline() {
       transition={{ type: "spring", stiffness: 200, damping: 13 }}
     >
       {[
-        { key: "standards", media: "lettering/hs-standards" as const, word: "h-[clamp(3.3rem,min(7.6vw,10svh),6.6rem)]" },
-        { key: "care", media: "lettering/hs-care" as const, word: "h-[clamp(4.3rem,min(10vw,13.5svh),8.5rem)]" },
+        { key: "standards", media: "lettering/hs-standards" as const, word: "h-[clamp(2.7rem,min(5.8vw,7.6svh),5.2rem)]" },
+        { key: "care", media: "lettering/hs-care" as const, word: "h-[clamp(2.9rem,min(6.3vw,8.3svh),5.6rem)]" },
       ].map((w) => (
         <span key={w.key} className="flex flex-col items-center">
           <MediaImage name="lettering/hs-high" alt="" sizes="(min-width: 1024px) 120px, 60px" className={high} />
-          <MediaImage name={w.media} alt="" sizes="(min-width: 1024px) 300px, 30vw" className={cn(w.word, "-mt-[0.9rem] w-auto lg:-mt-6")} />
+          <MediaImage name={w.media} alt="" sizes="(min-width: 1024px) 300px, 30vw" className={cn(w.word, "-mt-[0.7rem] w-auto lg:-mt-5")} />
         </span>
       ))}
     </motion.div>
@@ -262,7 +262,7 @@ export function BalloonLaunch() {
         {/* The launch hill, raised so the balloon starts low; it drops away fast once we soar. */}
         <motion.div
           aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-[26%] lg:h-[17%]"
+          className="absolute inset-x-0 bottom-0 h-[26%] sm:h-[17%]"
           animate={{ y: soaring ? "120%" : "0%" }}
           transition={{ type: "tween", duration: 1.3, ease: soaring ? [0.5, 0, 0.75, 0] : [0.22, 1, 0.36, 1] }}
         >
@@ -278,7 +278,7 @@ export function BalloonLaunch() {
           <Headline />
           {/* On small screens the ask sits under the headline; on wide screens it waits on the hill below. */}
           <motion.p
-            className="font-display mx-auto mt-3 max-w-[30rem] text-[clamp(0.95rem,1.7vw,1.35rem)] leading-tight drop-shadow-[0_3px_12px_rgb(0_0_0/0.35)] lg:hidden"
+            className="font-display mx-auto mt-3 max-w-[30rem] text-[clamp(0.95rem,1.7vw,1.35rem)] leading-tight drop-shadow-[0_3px_12px_rgb(0_0_0/0.35)] sm:hidden"
             animate={{ opacity: soaring ? 0 : 1 }}
             transition={{ duration: 0.4 }}
           >
@@ -288,7 +288,7 @@ export function BalloonLaunch() {
 
         {/* The rig: an outer pose that settles, and an inner wobble or sway that never resets. */}
         <motion.div
-          className="absolute bottom-[21%] left-1/2 aspect-[835/1072] h-[44%] max-w-[90%] -translate-x-1/2 origin-[50%_85%] sm:h-[46%] lg:bottom-[16%] lg:h-[40%]"
+          className="absolute bottom-[21%] left-1/2 aspect-[835/1072] h-[46%] max-w-[92%] -translate-x-1/2 origin-[50%_85%] sm:bottom-[16%] sm:h-[55%] lg:h-[56%]"
           animate={POSE[mode]}
           transition={POSE_MOTION}
         >
@@ -332,7 +332,7 @@ export function BalloonLaunch() {
             {mode === "grounded" && (
               <motion.p
                 key="ask"
-                className="font-display hidden max-w-[44rem] rounded-3xl bg-ink/85 px-7 py-4 text-center text-xl leading-tight text-white shadow-xl backdrop-blur-sm lg:block"
+                className="font-display hidden max-w-[44rem] rounded-3xl bg-ink/85 px-7 py-4 text-center text-xl leading-tight text-white shadow-xl backdrop-blur-sm sm:block"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
