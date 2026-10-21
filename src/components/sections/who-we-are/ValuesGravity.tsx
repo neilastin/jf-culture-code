@@ -18,6 +18,10 @@ const BODIES = valueOrder.flatMap((id) => [
   { id, label: values[id].strapline, size: 124 },
 ]);
 
+/* How much of a ball's width its longest word may fill, and how big the straplines may be next to the values. */
+const WORD_FILL = 0.86;
+const STRAPLINE_SHARE = 0.72;
+
 const DESIGN_WIDTH = 700;
 const GRAVITY = 2200;
 const BOUNCE = 0.62;
@@ -46,16 +50,27 @@ export function ValuesGravity() {
     let w = box.clientWidth;
     let h = box.clientHeight;
     const scale = () => Math.max(0.55, Math.min(1.25, w / DESIGN_WIDTH));
-    const sizeAll = () =>
-      bodies.current.forEach((b, i) => {
+    /*
+     * Lettering is measured, not guessed. The three values (Together, Open, Proactive) share one size:
+     * the biggest at which the longest of them still fits its ball, so no value outshouts another.
+     * Straplines fit their own balls, but never grow past a share of the values' size.
+     */
+    const sizeAll = () => {
+      const fit = bodies.current.map((b, i) => {
         b.r = (BODIES[i].size * scale()) / 2;
         const el = refs.current[i];
-        if (!el) return;
+        if (!el) return 0;
         el.style.width = `${b.r * 2}px`;
-        // Lettering scales with the ball, so even the smallest balls keep whole, centred words.
-        // Straplines get a touch more room per letter because their words are shorter.
-        el.style.fontSize = `${b.r * (BODIES[i].size > 140 ? 0.165 : 0.2)}px`;
+        el.style.fontSize = "10px";
+        const widest = Math.max(...Array.from(el.querySelectorAll<HTMLElement>("[data-word]"), (word) => word.offsetWidth));
+        return widest ? (10 * WORD_FILL * 2 * b.r) / widest : 0;
       });
+      const isValue = (i: number) => i % 2 === 0;
+      const valueSize = Math.min(...fit.filter((_, i) => isValue(i)));
+      refs.current.forEach((el, i) => {
+        if (el) el.style.fontSize = `${isValue(i) ? valueSize : Math.min(fit[i], valueSize * STRAPLINE_SHARE)}px`;
+      });
+    };
 
     // Start above the box (or already resting on the floor with reduced motion).
     bodies.current = BODIES.map((_, i) => ({
@@ -164,6 +179,8 @@ export function ValuesGravity() {
       if (!running) draw();
     });
     resize.observe(box);
+    // Measure again once the display font has loaded, since the fallback font is a different width.
+    void document.fonts.ready.then(sizeAll);
     return () => {
       stop();
       visible.disconnect();
@@ -247,7 +264,14 @@ export function ValuesGravity() {
               className={`font-display absolute top-0 left-0 grid aspect-square cursor-grab place-items-center rounded-full text-center shadow-xl select-none active:cursor-grabbing ${STYLE[b.id]}`}
               style={{ width: `${(b.size / DESIGN_WIDTH) * 100}%`, transform: "translate3d(-400px,-400px,0)" }}
             >
-              <span className="block w-[84%] leading-[1.05]">{b.label}</span>
+              <span className="block w-[84%] leading-[1.05]">
+                {/* One word per line, so each word can be as large as the ball's width allows. */}
+                {b.label.split(" ").map((w) => (
+                  <span key={w} data-word className="mx-auto block w-fit">
+                    {w}
+                  </span>
+                ))}
+              </span>
             </div>
           ))}
         </div>
