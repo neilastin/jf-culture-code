@@ -45,12 +45,12 @@ NEW_SUPPLIED = {
     "front-office.png": ("photos/front-office", 1100),
     "together-only.png": ("lettering/together-word", 1000),
     "who-we-are.png": ("photos/who-we-are", 1600),
-    "shape.jpg": ("photos/shape-the-code", 1600),
+    "shapecode.jpg": ("photos/shape-the-code", 1600),
     "youbelong.jpg": ("photos/belong-1", 1100),
     "youbelong2.jpg": ("photos/belong-2", 1100),
     "youbelong3.jpg": ("photos/belong-3", 1100),
     "IMG_0461.JPG": ("photos/throwback-leeds", 900),
-    "opencc.jpg": ("photos/open-candid-table", 1400),
+    "open.jpg": ("photos/open-candid-table", 1400),
     "one-team-always-only.png": ("lettering/one-team-always", 1000),
     "Cartoon Paddleboard Race on a Green Lake.png": ("illustrations/together-paddleboard", 1000),
     "Modern Video Meeting in a Bright Office-edit.png": ("illustrations/together-video-call", 1000),
@@ -71,7 +71,7 @@ PDF_LAYERS = {
     149: ("lettering/you-belong-here", 1000, True),
     183: ("lettering/how-we-succeed", 1300, True),
     392: ("lettering/the-promise", 1400, True),
-    436: ("lettering/shape-the-code", 1400, True),  # its photo and cut-out come from shape.jpg now
+    436: ("lettering/shape-the-code", 1400, True),  # its photo comes from shapecode.jpg now
     # Opener photographs and their cut-out foreground layers
     179: ("photos/how-we-succeed", 1600, False),
     217: ("photos/together", 1600, False),
@@ -168,7 +168,7 @@ def perspective_coeffs(quad, size) -> list[float]:
 
 # Photos cropped to the square opener stage (left, top, right, bottom in source pixels).
 NEW_CROP = {
-    "shape.jpg": (1600, 0, 5810, 4210),
+    "shapecode.jpg": (800, 0, 5472, 4672),
     "youbelong.jpg": (200, 0, 3633, 2575),
     "youbelong2.jpg": (900, 300, 6100, 4200),
     "youbelong3.jpg": (0, 0, 5764, 4323),

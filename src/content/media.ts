@@ -69,7 +69,7 @@ export const media = {
   "photos/hs-5": { src: "/images/photos/hs-5.webp", width: 600, height: 800 },
   "photos/hs-6": { src: "/images/photos/hs-6.webp", width: 800, height: 533 },
   "photos/hs-7": { src: "/images/photos/hs-7.webp", width: 800, height: 533 },
-  "photos/open-candid-table": { src: "/images/photos/open-candid-table.webp", width: 1400, height: 905 },
+  "photos/open-candid-table": { src: "/images/photos/open-candid-table.webp", width: 1400, height: 847 },
   "photos/open-candid": { src: "/images/photos/open-candid.webp", width: 1400, height: 460 },
   "photos/open": { src: "/images/photos/open.webp", width: 1600, height: 1600 },
   "photos/proactive-desk": { src: "/images/photos/proactive-desk.webp", width: 1000, height: 1437 },

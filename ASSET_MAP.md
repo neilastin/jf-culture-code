@@ -60,9 +60,9 @@ Built by `build_new_art()` in `scripts/build_assets.py`, each cropped to its art
 | `Cartoon Paddleboard Race on a Green Lake.png`, `Modern Video Meeting in a Bright Office-edit.png` | `illustrations/together-paddleboard`, `illustrations/together-video-call`: the pair in Together's Value in Action |
 | `together-only.png`, `one-team-always-only.png` | `lettering/together-word`, `lettering/one-team-always`: the Together opener (the print layers each carried a sliver of the other line) |
 | `youbelong.jpg`, `youbelong2.jpg`, `youbelong3.jpg` | `photos/belong-1` to `belong-3`: the You Belong Here collage |
-| `shape.jpg` | `photos/shape-the-code`: Shape the Code opener, lettering across the bottom |
+| `shapecode.jpg` | `photos/shape-the-code`: Shape the Code opener, lettering across the bottom |
 | `IMG_0461.JPG` | `photos/throwback-leeds`: the Leeds 2017 Easter egg Polaroid |
-| `opencc.jpg` | `photos/open-candid-table`: Open's Value in Action photo |
+| `open.jpg` | `photos/open-candid-table`: Open's Value in Action photo |
 | `who-we-are.png` | `photos/who-we-are`: the Who We Are opener (recropped team photo) |
 | `DSC04457-edited.png`, `DSC07145-2.jpg`, `Sequence 01.00_02_04_03.Still010.png` | Not used yet |
 
