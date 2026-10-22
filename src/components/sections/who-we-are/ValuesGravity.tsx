@@ -237,7 +237,7 @@ export function ValuesGravity() {
           role="switch"
           aria-checked={gravity}
           onClick={toggleGravity}
-          className="absolute top-3 right-3 z-10 inline-flex items-center gap-2.5 rounded-full bg-ink py-1.5 pr-1.5 pl-3.5 text-xs font-extrabold text-white shadow-lg transition-transform hover:scale-105 sm:top-4 sm:right-4 sm:text-sm"
+          className="absolute top-3 left-3 z-10 inline-flex items-center gap-2.5 rounded-full bg-ink py-1.5 pr-1.5 pl-3.5 text-xs font-extrabold text-white shadow-lg transition-transform hover:scale-105 sm:top-4 sm:left-4 sm:text-sm"
         >
           Gravity
           <span className={`relative h-6 w-11 rounded-full transition-colors duration-300 ${gravity ? "bg-lime" : "bg-white/25"}`}>
